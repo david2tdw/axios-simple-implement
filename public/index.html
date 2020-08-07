@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="text/javascript" src="./axios.js"></script>
+  </head>
+  <body>
+    <button class="btn">点我发送请求</button>
+  </body>
+  <script>
+    axios.interceptors.request.use(
+      function (config) {
+        config.method = 'get'
+        console.log('被我请求拦截器拦截了，request:', config)
+        return config
+      },
+      function (error) {
+        return Promise.reject(error)
+      }
+    )
+
+    // 添加响应拦截器
+    axios.interceptors.response.use(
+      function (response) {
+        console.log('被我响应拦截拦截了，response:', response)
+        response = {
+          message: 'new response',
+        }
+        return response
+      },
+      function (error) {
+        console.log('出错了')
+        return Promise.reject(error)
+      }
+    )
+
+    document.querySelector('.btn').onclick = function () {
+      axios({
+        url: 'http://localhost:8888/getTest',
+      }).then((res) => {
+        console.log('res:', res)
+      })
+    }
+  </script>
+</html>
